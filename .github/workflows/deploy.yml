@@ -1,0 +1,53 @@
+name: Deploy to GitHub Pages
+
+# Phase 1 publishes the prototype gallery (docs/prototypes). When the app
+# scaffold lands, the "Assemble site" step is replaced by `npm ci && npm run build`
+# and the artifact path becomes `dist` (see docs/DEPLOYMENT.md § 3.1).
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Assemble site
+        run: |
+          mkdir -p _site
+          cp -R docs/prototypes/. _site/
+          printf '%s\n' "${GITHUB_SHA}" > _site/version.txt
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    name: deploy
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
