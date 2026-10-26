@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>WebOS prototype: Command palette</title>
+<link rel="stylesheet" href="shared/proto.css" />
+<style>
+  .bgwin { left: 160px; top: 90px; width: 820px; height: 600px; }
+  .bgwin2 { left: 620px; top: 160px; width: 700px; height: 560px; }
+  .palette { left: 50%; top: 110px; transform: translateX(-50%); width: 680px; }
+  .pinput { height: 58px; display: flex; align-items: center; gap: 12px; padding: 0 18px; border-bottom: 1px solid var(--border); font-size: 17px; }
+  .pinput .typed { color: var(--text-1); }
+  .pinput .caret { width: 2px; height: 22px; background: var(--accent); margin-left: -10px; }
+  .scope { display: flex; gap: 6px; padding: 10px 14px 4px; }
+  .group { padding: 6px 8px; }
+  .group .label { padding: 8px 10px 6px; }
+  .res { height: 44px; display: flex; align-items: center; gap: 12px; padding: 0 10px; border-radius: 10px; }
+  .res.on { background: var(--accent-soft); }
+  .res .r-title { font-weight: 500; font-size: 13.5px; }
+  .res .r-title mark { background: transparent; color: var(--accent-text); font-weight: 700; }
+  .res .r-sub { color: var(--text-3); font-size: 12px; margin-left: 2px; }
+  .res .right { margin-left: auto; display: flex; gap: 6px; align-items: center; color: var(--text-3); font-size: 12px; }
+  .res .ic { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; background: var(--surface-3); color: var(--text-2); }
+  .res .ic svg.i { width: 15px; height: 15px; }
+  .pfoot { height: 40px; display: flex; align-items: center; gap: 16px; padding: 0 16px; border-top: 1px solid var(--border); color: var(--text-3); font-size: 12px; background: var(--surface-2); }
+  .pfoot span { display: flex; align-items: center; gap: 6px; }
+</style>
+</head>
+<body>
+<div class="screen dim" id="screen">
+  <section class="win bgwin inactive"><div class="titlebar"><i data-tile="files" data-size="20"></i><span>Documents</span><div class="win-controls"><span class="wc"><i data-icon="minus"></i></span><span class="wc"><i data-icon="square"></i></span><span class="wc"><i data-icon="x"></i></span></div></div><div class="win-body"><aside class="sidebar"><div class="nav-item "><i data-icon="house"></i>Home</div><div class="nav-item "><i data-icon="monitor"></i>Desktop</div><div class="nav-item active"><i data-icon="file-text"></i>Documents</div><div class="nav-item "><i data-icon="images"></i>Pictures</div><div class="nav-item "><i data-icon="download"></i>Downloads</div></aside><div class="grow table"><div class="tr" style="grid-template-columns:1fr 120px"><span class="name"><span class="ficon folder"><i data-icon="folder"></i></span>Projects</span><span class="meta">Today</span></div><div class="tr" style="grid-template-columns:1fr 120px"><span class="name"><span class="ficon folder"><i data-icon="folder"></i></span>Meeting notes</span><span class="meta">Yesterday</span></div><div class="tr" style="grid-template-columns:1fr 120px"><span class="name"><span class="ficon md"><i data-icon="file-text"></i></span>Q4-plan.md</span><span class="meta">Today</span></div><div class="tr" style="grid-template-columns:1fr 120px"><span class="name"><span class="ficon md"><i data-icon="file-text"></i></span>roadmap-2027.md</span><span class="meta">22 Oct</span></div><div class="tr" style="grid-template-columns:1fr 120px"><span class="name"><span class="ficon txt"><i data-icon="file-pen-line"></i></span>notes.txt</span><span class="meta">25 Oct</span></div><div class="tr" style="grid-template-columns:1fr 120px"><span class="name"><span class="ficon img"><i data-icon="file-image"></i></span>architecture.png</span><span class="meta">20 Oct</span></div></div></div></section>
+  <section class="win bgwin2 inactive"><div class="titlebar"><i data-tile="calendar" data-size="20"></i><span>Calendar</span><div class="win-controls"><span class="wc"><i data-icon="minus"></i></span><span class="wc"><i data-icon="square"></i></span><span class="wc"><i data-icon="x"></i></span></div></div><div class="win-body"></div></section>
+
+  <div class="panel palette" role="dialog" aria-label="Command palette">
+    <div class="pinput"><i data-icon="search" style="width:20px;height:20px;color:var(--text-3)"></i><span class="typed">q4 plan</span><span class="caret"></span><span class="spacer kbd">Esc</span></div>
+    <div class="scope"><span class="chip on">All</span><span class="chip"><i data-icon="app-window" style="width:13px;height:13px"></i>Apps</span><span class="chip"><i data-icon="file-text" style="width:13px;height:13px"></i>Files</span><span class="chip"><i data-icon="zap" style="width:13px;height:13px"></i>Actions</span><span class="chip"><i data-icon="settings" style="width:13px;height:13px"></i>Settings</span><span class="chip"><span class="mono" style="font-size:12px">&gt;_</span>Run</span></div>
+
+    <div class="group">
+      <div class="label">Best match</div>
+      <div class="res on"><span class="ficon md"><i data-icon="file-text"></i></span><span class="r-title"><mark>Q4-plan</mark>.md</span><span class="r-sub">~/Documents · edited 1 min ago</span><span class="right">Open in Text Editor <span class="kbd"><i data-icon="corner-down-left"></i></span></span></div>
+    </div>
+    <div class="group" style="padding-top:0">
+      <div class="label">Files</div>
+      <div class="res"><span class="ficon md"><i data-icon="file-text"></i></span><span class="r-title"><mark>q4</mark>-retro-<mark>plan</mark>ning.md</span><span class="r-sub">~/Documents/Meeting notes</span></div>
+      <div class="res"><span class="ficon code"><i data-icon="file-code"></i></span><span class="r-title"><mark>Q4</mark>-budget.csv</span><span class="r-sub">~/Documents</span></div>
+    </div>
+    <div class="group" style="padding-top:0">
+      <div class="label">Actions</div>
+      <div class="res"><span class="ic"><i data-icon="file-plus"></i></span><span class="r-title">New note from template "<mark>Plan</mark>"</span><span class="right"><span class="kbd">Ctrl</span><span class="kbd">Alt</span><span class="kbd">N</span></span></div>
+      <div class="res"><span class="ic"><i data-icon="calendar-days"></i></span><span class="r-title">Create event "<mark>Q4 plan</mark>ning review"</span><span class="right">Calendar</span></div>
+      <div class="res"><span class="ic"><i data-icon="moon"></i></span><span class="r-title">Switch to dark theme</span><span class="right"><span class="kbd">Ctrl</span><span class="kbd">Alt</span><span class="kbd">D</span></span></div>
+    </div>
+    <div class="pfoot"><span><span class="kbd">↑</span><span class="kbd">↓</span>Navigate</span><span><span class="kbd"><i data-icon="corner-down-left"></i></span>Open</span><span><span class="kbd">Tab</span>More actions</span><span><span class="kbd">&gt;</span>Run a command</span><span class="spacer">Searching 214 items in <b style="color:var(--text-2)">Work</b></span></div>
+  </div>
+</div>
+<script src="shared/icons.js"></script>
+<script src="shared/shell.js"></script>
+<script>
+  Shell.init({ topbar: { searchActive: true }, dock: { running: ['files', 'calendar'], active: 'files' } });
+</script>
+</body>
+</html>

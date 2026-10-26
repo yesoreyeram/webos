@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>WebOS prototype: Sign in</title>
+<link rel="stylesheet" href="shared/proto.css" />
+<style>
+  .veil { position: absolute; inset: 0; background: rgba(255, 255, 255, 0.28); backdrop-filter: blur(2px); }
+  .corner { position: absolute; z-index: 2; display: flex; align-items: center; gap: 8px; color: #1f2a44; font-weight: 500; }
+  .corner.c-tl { top: 22px; left: 28px; font-size: 15px; font-weight: 600; }
+  .corner.c-tl .brand { width: 30px; height: 30px; border-radius: 9px; }
+  .corner.c-tr { top: 22px; right: 28px; }
+  .corner.c-bl { bottom: 24px; left: 28px; color: #344054; font-size: 12.5px; }
+  .corner.c-br { bottom: 24px; right: 28px; color: #344054; font-size: 12.5px; }
+  .shell { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 440px; align-items: center; padding: 0 120px 0 140px; gap: 80px; z-index: 1; }
+  .hero h1 { font-size: 46px; line-height: 1.08; letter-spacing: -0.035em; margin: 0 0 16px; font-weight: 700; color: #0b1220; }
+  .hero h1 span { background: linear-gradient(90deg, #2563eb, #7c3aed); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero p { font-size: 16px; color: #344054; max-width: 520px; margin: 0 0 28px; line-height: 1.55; }
+  .feat { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 600px; }
+  .feat .f { padding: 14px; border-radius: 14px; background: rgba(255,255,255,.55); border: 1px solid rgba(255,255,255,.7); backdrop-filter: blur(12px); }
+  .feat .f .ic { width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; margin-bottom: 10px; color: #fff; }
+  .feat .f b { display: block; font-size: 13px; margin-bottom: 2px; }
+  .feat .f span { font-size: 12px; color: #475467; }
+  .preview { margin-top: 30px; display: flex; align-items: center; gap: 10px; }
+  .preview .tiles { display: flex; gap: 8px; padding: 8px; border-radius: 16px; background: rgba(255,255,255,.55); border: 1px solid rgba(255,255,255,.7); }
+  .card-signin { padding: 32px; border-radius: 20px; background: var(--glass-bg-strong); }
+  .card-signin h2 { margin: 0 0 4px; font-size: 22px; letter-spacing: -0.02em; }
+  .gbtn { height: 44px; border-radius: 10px; border: 1px solid #dadce0; background: #fff; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 500; font-size: 14px; color: #1f1f1f; box-shadow: var(--shadow-1); }
+  .or { display: flex; align-items: center; gap: 12px; color: var(--text-3); font-size: 12px; margin: 18px 0; }
+  .or::before, .or::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .acct { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface-1); }
+  .acct + .acct { margin-top: 8px; }
+  .acct .who { flex: 1; min-width: 0; }
+  .acct .who b { display: block; font-size: 13px; }
+  .acct .who span { font-size: 12px; color: var(--text-2); }
+  .acct.hover { border-color: var(--accent); box-shadow: var(--focus-ring); }
+  .note { margin-top: 20px; display: flex; gap: 10px; padding: 12px; border-radius: 12px; background: var(--surface-2); color: var(--text-2); font-size: 12px; line-height: 1.5; }
+  .note svg.i { color: var(--success); margin-top: 1px; }
+</style>
+</head>
+<body>
+<div class="screen" id="screen">
+  <div class="veil"></div>
+
+  <div class="corner c-tl"><span class="brand" data-brand></span>WebOS</div>
+  <div class="corner c-tr">
+    <span class="btn ghost sm" style="color:#344054"><i data-icon="languages"></i>English (US)</span>
+    <span class="btn ghost sm icon" style="color:#344054"><i data-icon="accessibility"></i></span>
+    <span class="btn ghost sm icon" style="color:#344054"><i data-icon="sun-moon"></i></span>
+  </div>
+
+  <div class="shell">
+    <div class="hero">
+      <h1>Your whole workspace,<br><span>right in the browser.</span></h1>
+      <p>A fast, private desktop with files, editor, terminal and calendar. Install-free, works offline, and every profile keeps its own data on this device.</p>
+      <div class="feat">
+        <div class="f"><span class="ic" style="background:linear-gradient(140deg,#34d399,#059669)"><i data-icon="shield-check"></i></span><b>Private by design</b><span>No tracking. Data never leaves your device.</span></div>
+        <div class="f"><span class="ic" style="background:linear-gradient(140deg,#60a5fa,#2563eb)"><i data-icon="users"></i></span><b>Multiple profiles</b><span>Work and personal, one sign-in.</span></div>
+        <div class="f"><span class="ic" style="background:linear-gradient(140deg,#a78bfa,#6d28d9)"><i data-icon="zap"></i></span><b>Works offline</b><span>Installable PWA, instant start.</span></div>
+      </div>
+      <div class="preview">
+        <div class="tiles"><i data-tile="files" data-size="34"></i><i data-tile="editor" data-size="34"></i><i data-tile="terminal" data-size="34"></i><i data-tile="calendar" data-size="34"></i><i data-tile="media" data-size="34"></i><i data-tile="calculator" data-size="34"></i><i data-tile="settings" data-size="34"></i></div>
+        <span class="t-sm" style="color:#475467">7 built-in apps</span>
+      </div>
+    </div>
+
+    <div class="card-signin glass">
+      <h2>Welcome back</h2>
+      <div class="muted" style="margin-bottom:22px">Choose an account to continue.</div>
+
+      <div class="acct hover"><span class="avatar" style="--size:36px">JD</span><div class="who"><b>Jordan Diaz</b><span>jordan.diaz@example.com · 3 profiles</span></div><span data-google style="display:grid"></span></div>
+      <div class="acct"><span class="avatar slate" style="--size:36px"><i data-icon="user" style="width:18px;height:18px"></i></span><div class="who"><b>Shared desk</b><span>Local account · 1 profile</span></div><i data-icon="chevron-right" style="color:var(--text-3)"></i></div>
+
+      <div class="or">or</div>
+
+      <div class="gbtn"><span data-google style="display:grid"></span>Sign in with Google</div>
+      <div class="btn lg block" style="margin-top:10px"><i data-icon="user-plus"></i>Create a local account</div>
+
+      <div class="note"><i data-icon="shield-check"></i><span>Google sign-in only identifies you. Files and settings stay in this browser and can be protected with a profile PIN.</span></div>
+    </div>
+  </div>
+
+  <div class="corner c-bl"><i data-icon="cloud-off" style="width:14px;height:14px"></i>Offline ready · v1.0.0</div>
+  <div class="corner c-br">Privacy · Security · Help</div>
+</div>
+<script src="shared/icons.js"></script>
+<script src="shared/shell.js"></script>
+<script>Shell.init({ topbar: false, dock: false });</script>
+</body>
+</html>

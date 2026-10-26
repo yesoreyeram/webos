@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>WebOS prototype: Multitasking with snap layouts</title>
+<link rel="stylesheet" href="shared/proto.css" />
+<style>
+  .files { left: 8px; top: 46px; width: 708px; height: 758px; }
+  .editor { left: 724px; top: 46px; width: 708px; height: 758px; }
+  .storage { margin-top: auto; padding: 10px 8px 4px; }
+  .meter { height: 6px; border-radius: 999px; background: var(--surface-3); overflow: hidden; margin: 8px 0 6px; }
+  .meter span { display: block; height: 100%; width: 18%; background: var(--accent); border-radius: 999px; }
+  .cols { grid-template-columns: 1fr 128px 74px; }
+  .tabs { height: 38px; display: flex; align-items: flex-end; gap: 2px; padding: 0 8px; background: var(--surface-2); border-bottom: 1px solid var(--border); }
+  .tab { height: 31px; padding: 0 10px 0 12px; display: flex; align-items: center; gap: 8px; border-radius: 8px 8px 0 0; color: var(--text-2); font-weight: 500; font-size: 12.5px; }
+  .tab.on { background: var(--surface-1); color: var(--text-1); box-shadow: 0 0 0 1px var(--border); clip-path: inset(-2px -2px 0 -2px); }
+  .tab .x { width: 16px; height: 16px; color: var(--text-3); }
+  .tab .mod { width: 7px; height: 7px; border-radius: 999px; background: var(--accent); }
+  .codearea { flex: 1; display: flex; font-family: var(--font-mono); font-size: 12.5px; line-height: 22px; overflow: hidden; }
+  .gutter { width: 48px; padding: 12px 10px 0 0; text-align: right; color: var(--text-3); background: var(--surface-1); user-select: none; }
+  .lines { flex: 1; padding: 12px 16px 0 6px; white-space: pre; color: var(--text-1); }
+  .cur-line { background: var(--accent-soft); margin: 0 -16px 0 -6px; padding: 0 16px 0 6px; }
+  .h { color: var(--accent-text); font-weight: 700; }
+  .b { color: var(--text-3); }
+  .k { color: #c026d3; }
+  [data-theme='dark'] .k { color: #ec9bf6; }
+  .q { color: var(--text-2); font-style: italic; }
+  .c { background: var(--surface-3); border-radius: 4px; }
+  .caret { display: inline-block; width: 2px; height: 16px; background: var(--accent); vertical-align: -3px; margin-left: 1px; }
+  .pill-edited { font-size: 11px; color: var(--text-3); font-weight: 500; }
+</style>
+</head>
+<body>
+<div class="screen" id="screen">
+
+  <!-- Files (snapped left) -->
+  <section class="win files inactive" aria-label="Files">
+    <div class="titlebar">
+      <i data-tile="files" data-size="20"></i><span>Documents</span>
+      <div class="win-controls"><span class="wc"><i data-icon="minus"></i></span><span class="wc"><i data-icon="copy"></i></span><span class="wc close"><i data-icon="x"></i></span></div>
+    </div>
+    <div class="win-body">
+      <aside class="sidebar">
+        <div class="label">Favorites</div>
+        <div class="nav-item"><i data-icon="house"></i>Home</div>
+        <div class="nav-item"><i data-icon="monitor"></i>Desktop</div>
+        <div class="nav-item active"><i data-icon="file-text"></i>Documents<span class="count">8</span></div>
+        <div class="nav-item"><i data-icon="images"></i>Pictures</div>
+        <div class="nav-item"><i data-icon="download"></i>Downloads</div>
+        <div class="label">Library</div>
+        <div class="nav-item"><i data-icon="history"></i>Recent</div>
+        <div class="nav-item"><i data-icon="star"></i>Starred</div>
+        <div class="nav-item"><i data-icon="trash-2"></i>Trash<span class="count">3</span></div>
+        <div class="storage">
+          <div class="row t-sm medium"><i data-icon="hard-drive" style="width:14px;height:14px;color:var(--text-3)"></i>&nbsp;Storage</div>
+          <div class="meter"><span></span></div>
+          <div class="t-xs subtle">362 MB of 2 GB used</div>
+        </div>
+      </aside>
+      <div class="col grow">
+        <div class="toolbar">
+          <span class="btn ghost icon sm"><i data-icon="arrow-left"></i></span>
+          <span class="btn ghost icon sm" style="opacity:.45"><i data-icon="arrow-right"></i></span>
+          <div class="crumb"><span>Home</span><i data-icon="chevron-right"></i><span class="cur">Documents</span></div>
+          <span class="spacer"></span>
+          <div class="input" style="width:150px;height:28px"><i data-icon="search" style="width:14px;height:14px"></i>Search</div>
+          <div class="btn-group"><span class="btn sm icon on"><i data-icon="list"></i></span><span class="btn sm icon"><i data-icon="grid-2x2"></i></span></div>
+          <span class="btn sm primary"><i data-icon="plus" style="width:14px;height:14px"></i>New</span>
+        </div>
+        <div class="table">
+          <div class="tr th cols"><span class="row gap-4">Name <i data-icon="chevron-up" style="width:12px;height:12px"></i></span><span>Modified</span><span>Size</span></div>
+          <div class="tr cols"><span class="name"><span class="ficon folder"><i data-icon="folder"></i></span>Projects</span><span class="meta">Today, 09:14</span><span class="meta">6 items</span></div>
+          <div class="tr cols"><span class="name"><span class="ficon folder"><i data-icon="folder"></i></span>Meeting notes</span><span class="meta">Yesterday</span><span class="meta">12 items</span></div>
+          <div class="tr cols sel"><span class="name"><span class="ficon md"><i data-icon="file-text"></i></span>Q4-plan.md</span><span class="meta">Today, 10:41</span><span class="meta">4.1 KB</span></div>
+          <div class="tr cols"><span class="name"><span class="ficon md"><i data-icon="file-text"></i></span>roadmap-2027.md</span><span class="meta">22 Oct</span><span class="meta">8.6 KB</span></div>
+          <div class="tr cols"><span class="name"><span class="ficon txt"><i data-icon="file-pen-line"></i></span>notes.txt</span><span class="meta">25 Oct</span><span class="meta">1.2 KB</span></div>
+          <div class="tr cols"><span class="name"><span class="ficon img"><i data-icon="file-image"></i></span>architecture.png</span><span class="meta">20 Oct</span><span class="meta">248 KB</span></div>
+          <div class="tr cols"><span class="name"><span class="ficon code"><i data-icon="file-code"></i></span>budget.csv</span><span class="meta">18 Oct</span><span class="meta">3.4 KB</span></div>
+          <div class="tr cols"><span class="name"><span class="ficon md"><i data-icon="book-open"></i></span>Welcome.md</span><span class="meta">12 Oct</span><span class="meta">2.0 KB</span></div>
+        </div>
+        <span class="spacer" style="margin:auto 0 0"></span>
+        <div class="statusbar"><span>8 items</span><span class="sep"></span><span>1 selected · 4.1 KB</span><span class="spacer row gap-4"><i data-icon="shield-check" style="width:13px;height:13px;color:var(--success)"></i>Stored on this device</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Editor (snapped right, focused, snap flyout open) -->
+  <section class="win editor" aria-label="Text Editor">
+    <div class="titlebar">
+      <i data-tile="editor" data-size="20"></i><span>Q4-plan.md</span><span class="pill-edited">Edited</span>
+      <div class="win-controls">
+        <span class="wc"><i data-icon="minus"></i></span>
+        <span class="wc hover"><i data-icon="copy"></i>
+          <div class="snap-flyout">
+            <span class="title">Snap layouts</span>
+            <span class="snap-layout" style="grid-template-columns:1fr 1fr"><span></span><span class="hot"></span></span>
+            <span class="snap-layout" style="grid-template-columns:2fr 1fr"><span></span><span></span></span>
+            <span class="snap-layout" style="grid-template-columns:1fr 1fr 1fr"><span></span><span></span><span></span></span>
+            <span class="snap-layout" style="grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr"><span></span><span></span><span></span><span></span></span>
+          </div>
+        </span>
+        <span class="wc close"><i data-icon="x"></i></span>
+      </div>
+    </div>
+    <div class="tabs">
+      <span class="tab on"><i data-icon="file-text" style="width:14px;height:14px;color:#7c3aed"></i>Q4-plan.md<span class="mod"></span></span>
+      <span class="tab"><i data-icon="file-pen-line" style="width:14px;height:14px"></i>notes.txt<i data-icon="x" class="x"></i></span>
+      <span class="tab" style="padding:0 8px"><i data-icon="plus" style="width:14px;height:14px"></i></span>
+    </div>
+    <div class="toolbar" style="height:42px">
+      <span class="btn sm"><i data-icon="save" style="width:14px;height:14px"></i>Save</span>
+      <span class="vdivider" style="margin:10px 2px"></span>
+      <span class="btn ghost sm icon"><i data-icon="undo-2"></i></span>
+      <span class="btn ghost sm icon"><i data-icon="redo-2"></i></span>
+      <span class="vdivider" style="margin:10px 2px"></span>
+      <span class="btn ghost sm icon"><i data-icon="bold"></i></span>
+      <span class="btn ghost sm icon"><i data-icon="italic"></i></span>
+      <span class="btn ghost sm icon"><i data-icon="hash"></i></span>
+      <span class="btn ghost sm icon"><i data-icon="list"></i></span>
+      <span class="btn ghost sm icon"><i data-icon="link"></i></span>
+      <span class="spacer"></span>
+      <div class="segmented"><span class="on"><i data-icon="pencil" style="width:13px;height:13px"></i>Edit</span><span><i data-icon="columns-2" style="width:13px;height:13px"></i>Split</span><span><i data-icon="eye" style="width:13px;height:13px"></i>Preview</span></div>
+    </div>
+    <div class="codearea">
+      <div class="gutter">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23</div>
+      <div class="lines"><span class="h"># Q4 Plan: WebOS launch</span>
+
+<span class="h">## Goals</span>
+<span class="b">-</span> Ship <span class="k">**v1.0**</span> to GitHub Pages
+<span class="b">-</span> Multiple profiles per account, PIN encryption
+<span class="b">-</span> WCAG 2.2 AA across the shell and core apps
+
+<span class="h">## Milestones</span>
+<span class="b">|</span> Week <span class="b">|</span> Deliverable          <span class="b">|</span> Owner  <span class="b">|</span>
+<span class="b">|------|----------------------|--------|</span>
+<span class="b">|</span> 44   <span class="b">|</span> Prototype sign-off   <span class="b">|</span> Jordan <span class="b">|</span>
+<div class="cur-line"><span class="b">|</span> 46   <span class="b">|</span> Kernel + VFS         <span class="b">|</span> Priya<span class="caret"></span>  <span class="b">|</span></div><span class="b">|</span> 48   <span class="b">|</span> Apps + e2e suite     <span class="b">|</span> Alex   <span class="b">|</span>
+
+<span class="q">&gt; <span class="k">**Note:**</span> all data stays on this device.</span>
+
+<span class="h">## Risks</span>
+<span class="b">-</span> Storage quota on Safari (<span class="c">`~1 GB`</span>)
+<span class="b">-</span> Google client ID setup per environment
+<span class="b">-</span> Large file uploads (&gt; 25 MB) are rejected
+
+<span class="h">## Next steps</span>
+<span class="b">1.</span> Review prototypes with stakeholders</div>
+    </div>
+    <div class="statusbar"><span>Ln 12, Col 34</span><span class="sep"></span><span>Markdown</span><span class="sep"></span><span>UTF-8</span><span class="sep"></span><span>Spaces: 2</span><span class="spacer">Auto-saved 10:41</span></div>
+  </section>
+
+</div>
+<script src="shared/icons.js"></script>
+<script src="shared/shell.js"></script>
+<script>
+  Shell.init({
+    topbar: { workspaces: ['Main', 'Research'], wsCounts: [2, 1] },
+    dock: { running: ['files', 'editor'], active: 'editor' },
+  });
+</script>
+</body>
+</html>

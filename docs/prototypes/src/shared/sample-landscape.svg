@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1e3a8a"/>
+      <stop offset="0.45" stop-color="#7c3aed"/>
+      <stop offset="0.75" stop-color="#f472b6"/>
+      <stop offset="1" stop-color="#fdba74"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#fff7ed"/>
+      <stop offset="0.6" stop-color="#fed7aa"/>
+      <stop offset="1" stop-color="#fdba74" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="lake" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f9a8d4"/>
+      <stop offset="0.5" stop-color="#6d28d9"/>
+      <stop offset="1" stop-color="#1e1b4b"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#sky)"/>
+  <circle cx="780" cy="455" r="170" fill="url(#sun)"/>
+  <circle cx="780" cy="455" r="62" fill="#fff7ed"/>
+  <g fill="#ffffff" opacity="0.8">
+    <circle cx="120" cy="90" r="1.6"/><circle cx="260" cy="60" r="1.2"/><circle cx="420" cy="120" r="1.4"/>
+    <circle cx="560" cy="50" r="1"/><circle cx="980" cy="80" r="1.5"/><circle cx="1100" cy="140" r="1.1"/>
+    <circle cx="860" cy="40" r="1.2"/><circle cx="340" cy="180" r="0.9"/>
+  </g>
+  <path d="M0 470 L140 360 L230 420 L360 290 L470 400 L560 340 L700 470 Z" fill="#4c1d95" opacity="0.75"/>
+  <path d="M520 470 L660 330 L760 410 L880 300 L1010 420 L1100 360 L1200 430 L1200 470 Z" fill="#5b21b6" opacity="0.7"/>
+  <path d="M0 520 L120 440 L260 500 L400 410 L540 500 L640 450 L780 520 L900 440 L1040 510 L1200 450 L1200 540 L0 540 Z" fill="#2e1065"/>
+  <rect y="530" width="1200" height="270" fill="url(#lake)"/>
+  <g fill="#fff7ed" opacity="0.55">
+    <rect x="700" y="560" width="160" height="4" rx="2"/>
+    <rect x="720" y="590" width="120" height="3" rx="1.5"/>
+    <rect x="740" y="620" width="80" height="3" rx="1.5"/>
+    <rect x="755" y="650" width="50" height="2" rx="1"/>
+  </g>
+  <path d="M0 800 L0 700 C 200 680 380 720 520 760 L 600 800 Z" fill="#0f0a2e" opacity="0.85"/>
+  <path d="M1200 800 L1200 690 C 1040 700 920 740 860 800 Z" fill="#0f0a2e" opacity="0.85"/>
+</svg>

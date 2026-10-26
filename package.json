@@ -1,0 +1,26 @@
+{
+  "name": "webos",
+  "version": "0.1.0",
+  "private": true,
+  "description": "WebOS: a clean, modern desktop environment that runs entirely in the browser and deploys to GitHub Pages.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "prototypes:icons": "node scripts/build-prototype-icons.mjs",
+    "prototypes:render": "node scripts/render-prototypes.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "e2e": "playwright test",
+    "check:docs": "node scripts/check-docs.mjs"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "@playwright/test": "1.63.0",
+    "lucide-static": "^1.61.0",
+    "mermaid": "^12.2.0",
+    "vitest": "^5.0.5"
+  }
+}

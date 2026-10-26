@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>WebOS prototype: Mobile and tablet layout</title>
+<link rel="stylesheet" href="shared/proto.css" />
+<style>
+  .screen { display: flex; align-items: center; justify-content: center; gap: 56px; padding-top: 40px; }
+  .head { position: absolute; top: 26px; left: 40px; right: 40px; display: flex; align-items: baseline; gap: 14px; }
+  .head h1 { margin: 0; font-size: 20px; letter-spacing: -0.02em; }
+  .phone-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .cap { font-weight: 600; color: #1f2a44; display: flex; gap: 8px; align-items: center; }
+  .phone { width: 360px; height: 760px; border-radius: 48px; padding: 10px; background: #0b0d12; box-shadow: 0 30px 60px -20px rgba(16,24,40,.45), inset 0 0 0 2px #2a2e37; }
+  .ps { width: 100%; height: 100%; border-radius: 38px; overflow: hidden; position: relative; background: var(--wallpaper); display: flex; flex-direction: column; }
+  .sbar { height: 40px; flex: none; display: flex; align-items: center; justify-content: space-between; padding: 0 26px 0 30px; font-weight: 600; font-size: 13px; }
+  .island { width: 96px; height: 26px; border-radius: 999px; background: #0b0d12; }
+  .mtop { height: 48px; flex: none; display: flex; align-items: center; gap: 8px; padding: 0 14px; }
+  .msearch { flex: 1; height: 36px; border-radius: 12px; display: flex; align-items: center; gap: 8px; padding: 0 12px; color: var(--text-3); background: var(--glass-bg-strong); border: 1px solid var(--glass-border); box-shadow: var(--shadow-1); }
+  .mnav { position: absolute; left: 10px; right: 10px; bottom: 10px; height: 64px; border-radius: 22px; display: flex; align-items: center; justify-content: space-around; padding: 0 6px; }
+  .mnav .it { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 10px; font-weight: 500; color: var(--text-2); position: relative; }
+  .mnav .it .app-tile { --s: 34px; }
+  .mnav .it .pill { position: absolute; bottom: -6px; width: 14px; height: 3px; border-radius: 3px; background: var(--accent); }
+  .mnav .center { width: 46px; height: 46px; border-radius: 15px; background: var(--text-1); color: var(--surface-1); display: grid; place-items: center; }
+  .mwidget { margin: 6px 14px 0; padding: 14px; border-radius: 20px; }
+  .mgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px 0; padding: 18px 14px; }
+  .mgrid .a { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 11px; font-weight: 500; color: #1f2a44; }
+  .apphead { height: 52px; flex: none; display: flex; align-items: center; gap: 6px; padding: 0 8px; background: var(--surface-1); border-bottom: 1px solid var(--border); }
+  .apphead b { font-size: 16px; flex: 1; }
+  .appbody { flex: 1; background: var(--surface-1); overflow: hidden; }
+  .chips { display: flex; gap: 6px; padding: 10px 12px; overflow: hidden; }
+  .mrow { display: flex; align-items: center; gap: 12px; height: 58px; padding: 0 14px; border-bottom: 1px solid var(--surface-3); }
+  .mrow .ficon { width: 36px; height: 36px; border-radius: 10px; }
+  .mrow .t { flex: 1; min-width: 0; }
+  .mrow .t b { display: block; font-weight: 500; font-size: 14px; }
+  .mrow .t span { font-size: 12px; color: var(--text-3); }
+  .fab { position: absolute; right: 18px; bottom: 90px; width: 52px; height: 52px; border-radius: 16px; background: var(--accent); color: #fff; display: grid; place-items: center; box-shadow: 0 10px 24px -8px rgba(37,99,235,.6); }
+  .sw-dim { position: absolute; inset: 0; background: rgba(15,23,42,.35); backdrop-filter: blur(14px); }
+  .cards { position: absolute; left: 0; right: 0; top: 110px; display: flex; gap: 14px; padding-left: 44px; }
+  .scard { width: 230px; flex: none; display: flex; flex-direction: column; gap: 8px; }
+  .scard .hd { display: flex; align-items: center; gap: 8px; color: #fff; font-weight: 600; }
+  .scard .hd .app-tile { --s: 24px; border-radius: 7px; }
+  .scard .shot { height: 430px; border-radius: 20px; background: var(--surface-1); overflow: hidden; box-shadow: 0 20px 40px -12px rgba(0,0,0,.45); }
+  .scard .x { margin-left: auto; width: 24px; height: 24px; border-radius: 999px; background: rgba(255,255,255,.2); display: grid; place-items: center; }
+  .scard .x svg.i { width: 13px; height: 13px; }
+  .closeall { position: absolute; bottom: 92px; left: 50%; transform: translateX(-50%); height: 36px; padding: 0 16px; border-radius: 999px; background: rgba(255,255,255,.18); color: #fff; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+</style>
+</head>
+<body>
+<div class="screen" id="screen">
+  <div class="head"><h1>Responsive layout</h1><span class="muted">Phones and narrow tablets (&lt; 768 px): apps open full-screen, the dock becomes bottom navigation, and swipe-up shows the app switcher.</span></div>
+
+  <!-- Home -->
+  <div class="phone-wrap">
+    <div class="phone"><div class="ps">
+      <div class="sbar"><span>10:42</span><span class="island"></span><span class="row gap-4"><i data-icon="cloud-check" style="width:14px;height:14px"></i></span></div>
+      <div class="mtop"><span class="avatar" style="--size:34px">JD</span><div class="msearch"><i data-icon="search" style="width:15px;height:15px"></i>Search WebOS</div><span class="btn icon" style="height:36px;width:36px;border-radius:12px;background:var(--glass-bg-strong)"><i data-icon="bell"></i></span></div>
+      <div class="mwidget glass">
+        <div class="row"><div class="grow"><div style="font-size:34px;font-weight:600;letter-spacing:-.03em;line-height:1">10:42</div><div class="muted t-sm" style="margin-top:4px">Monday, 26 October</div></div><span class="badge accent">Work</span></div>
+        <div class="divider" style="margin:12px 0"></div>
+        <div class="row gap-10"><span style="width:3px;height:30px;border-radius:3px;background:#e11d48"></span><div class="grow"><b>Design review</b><div class="t-xs muted">11:00 · in 18 min</div></div><span class="btn sm">Join</span></div>
+      </div>
+      <div class="mgrid">
+        <div class="a"><i data-tile="files" data-size="54"></i>Files</div>
+        <div class="a"><i data-tile="editor" data-size="54"></i>Editor</div>
+        <div class="a"><i data-tile="terminal" data-size="54"></i>Terminal</div>
+        <div class="a"><i data-tile="calendar" data-size="54"></i>Calendar</div>
+        <div class="a"><i data-tile="media" data-size="54"></i>Media</div>
+        <div class="a"><i data-tile="calculator" data-size="54"></i>Calculator</div>
+        <div class="a"><i data-tile="clock" data-size="54"></i>Clock</div>
+        <div class="a"><i data-tile="settings" data-size="54"></i>Settings</div>
+      </div>
+      <nav class="mnav glass">
+        <span class="it"><i data-tile="files" data-size="34"></i></span>
+        <span class="it"><i data-tile="editor" data-size="34"></i></span>
+        <span class="center"><i data-icon="layout-grid"></i></span>
+        <span class="it"><i data-tile="calendar" data-size="34"></i></span>
+        <span class="it"><i data-tile="settings" data-size="34"></i></span>
+      </nav>
+    </div></div>
+    <div class="cap"><i data-icon="house"></i>Home</div>
+  </div>
+
+  <!-- Files full-screen -->
+  <div class="phone-wrap">
+    <div class="phone"><div class="ps">
+      <div class="sbar" style="background:var(--surface-1)"><span>10:42</span><span class="island"></span><span class="row gap-4"><i data-icon="cloud-check" style="width:14px;height:14px"></i></span></div>
+      <div class="apphead"><span class="btn ghost icon"><i data-icon="chevron-left"></i></span><b>Documents</b><span class="btn ghost icon"><i data-icon="search"></i></span><span class="btn ghost icon"><i data-icon="ellipsis"></i></span></div>
+      <div class="appbody">
+        <div class="chips"><span class="chip on">All</span><span class="chip">Recent</span><span class="chip">Starred</span><span class="chip">Images</span></div>
+        <div class="mrow"><span class="ficon folder"><i data-icon="folder"></i></span><div class="t"><b>Projects</b><span>6 items · Today</span></div><i data-icon="chevron-right" style="color:var(--text-3)"></i></div>
+        <div class="mrow"><span class="ficon folder"><i data-icon="folder"></i></span><div class="t"><b>Meeting notes</b><span>12 items · Yesterday</span></div><i data-icon="chevron-right" style="color:var(--text-3)"></i></div>
+        <div class="mrow"><span class="ficon md"><i data-icon="file-text"></i></span><div class="t"><b>Q4-plan.md</b><span>4.1 KB · 10:41</span></div><i data-icon="ellipsis" style="color:var(--text-3)"></i></div>
+        <div class="mrow"><span class="ficon md"><i data-icon="file-text"></i></span><div class="t"><b>roadmap-2027.md</b><span>8.6 KB · 22 Oct</span></div><i data-icon="ellipsis" style="color:var(--text-3)"></i></div>
+        <div class="mrow"><span class="ficon txt"><i data-icon="file-pen-line"></i></span><div class="t"><b>notes.txt</b><span>1.2 KB · 25 Oct</span></div><i data-icon="ellipsis" style="color:var(--text-3)"></i></div>
+        <div class="mrow"><span class="ficon img"><i data-icon="file-image"></i></span><div class="t"><b>architecture.png</b><span>248 KB · 20 Oct</span></div><i data-icon="ellipsis" style="color:var(--text-3)"></i></div>
+        <div class="mrow"><span class="ficon code"><i data-icon="file-code"></i></span><div class="t"><b>budget.csv</b><span>3.4 KB · 18 Oct</span></div><i data-icon="ellipsis" style="color:var(--text-3)"></i></div>
+      </div>
+      <span class="fab"><i data-icon="plus"></i></span>
+      <nav class="mnav glass">
+        <span class="it"><i data-tile="files" data-size="34"></i><span class="pill"></span></span>
+        <span class="it"><i data-tile="editor" data-size="34"></i></span>
+        <span class="center"><i data-icon="layout-grid"></i></span>
+        <span class="it"><i data-tile="calendar" data-size="34"></i></span>
+        <span class="it"><i data-tile="settings" data-size="34"></i></span>
+      </nav>
+    </div></div>
+    <div class="cap"><i data-icon="folder"></i>App full-screen</div>
+  </div>
+
+  <!-- Switcher -->
+  <div class="phone-wrap">
+    <div class="phone"><div class="ps">
+      <div class="sw-dim"></div>
+      <div class="sbar" style="position:relative;color:#fff"><span>10:42</span><span class="island"></span><span class="row gap-4"><i data-icon="cloud-check" style="width:14px;height:14px"></i></span></div>
+      <div style="position:relative;color:#fff;text-align:center;font-weight:600;margin-top:20px">3 apps open</div>
+      <div class="cards">
+        <div class="scard"><div class="hd"><i data-tile="editor" data-size="24"></i>Text Editor<span class="x"><i data-icon="x"></i></span></div>
+          <div class="shot"><div class="apphead" style="height:44px"><b style="font-size:14px;padding-left:8px">Q4-plan.md</b></div>
+            <div style="padding:12px 14px;font-family:var(--font-mono);font-size:10.5px;line-height:18px;color:var(--text-1);white-space:pre"><span style="color:var(--accent-text);font-weight:700"># Q4 Plan</span>
+
+<span style="color:var(--accent-text);font-weight:700">## Goals</span>
+- Ship v1.0 to Pages
+- Profiles + PIN
+- WCAG 2.2 AA
+
+<span style="color:var(--accent-text);font-weight:700">## Milestones</span>
+| 44 | Prototypes |
+| 46 | Kernel     |
+| 48 | Apps + e2e |</div></div></div>
+        <div class="scard"><div class="hd"><i data-tile="files" data-size="24"></i>Files<span class="x"><i data-icon="x"></i></span></div>
+          <div class="shot"></div></div>
+      </div>
+      <div class="closeall"><i data-icon="x" style="width:14px;height:14px"></i>Close all</div>
+      <nav class="mnav glass">
+        <span class="it"><i data-tile="files" data-size="34"></i><span class="pill"></span></span>
+        <span class="it"><i data-tile="editor" data-size="34"></i><span class="pill"></span></span>
+        <span class="center"><i data-icon="layout-grid"></i></span>
+        <span class="it"><i data-tile="calendar" data-size="34"></i><span class="pill"></span></span>
+        <span class="it"><i data-tile="settings" data-size="34"></i></span>
+      </nav>
+    </div></div>
+    <div class="cap"><i data-icon="layers"></i>App switcher</div>
+  </div>
+</div>
+<script src="shared/icons.js"></script>
+<script src="shared/shell.js"></script>
+<script>Shell.init({ topbar: false, dock: false });</script>
+</body>
+</html>

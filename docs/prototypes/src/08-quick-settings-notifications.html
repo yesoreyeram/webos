@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>WebOS prototype: Quick settings and notifications</title>
+<link rel="stylesheet" href="shared/proto.css" />
+<style>
+  .bgwin { left: 120px; top: 92px; width: 860px; height: 640px; }
+  .cc { top: 46px; right: 10px; width: 384px; background: transparent; border: 0; box-shadow: none; overflow: visible; display: flex; flex-direction: column; gap: 10px; backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .box { border-radius: 18px; padding: 14px; }
+  .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .qt { height: 58px; border-radius: 14px; padding: 0 12px; display: flex; align-items: center; gap: 10px; background: var(--surface-1); border: 1px solid var(--border); }
+  .qt .ic { width: 32px; height: 32px; border-radius: 999px; display: grid; place-items: center; background: var(--surface-3); color: var(--text-2); flex: none; }
+  .qt.on .ic { background: var(--accent); color: #fff; }
+  .qt b { display: block; font-size: 12.5px; }
+  .qt span.s { font-size: 11.5px; color: var(--text-2); }
+  .sw { display: flex; gap: 8px; margin-top: 4px; }
+  .sw i { width: 24px; height: 24px; border-radius: 999px; display: block; box-shadow: inset 0 0 0 1px rgba(0,0,0,.08); }
+  .sw i.on { box-shadow: 0 0 0 2px var(--surface-1), 0 0 0 4px var(--accent); }
+  .slider { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
+  .track { flex: 1; height: 6px; border-radius: 999px; background: var(--surface-3); position: relative; }
+  .track span { position: absolute; left: 0; top: 0; bottom: 0; width: 40%; border-radius: 999px; background: var(--accent); }
+  .track b { position: absolute; left: 40%; top: 50%; width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 999px; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.25), 0 0 0 1px rgba(0,0,0,.05); }
+  .who { display: flex; align-items: center; gap: 10px; padding-top: 12px; margin-top: 12px; border-top: 1px solid var(--border); }
+  .nhead { display: flex; align-items: center; margin-bottom: 6px; }
+  .n { display: flex; gap: 10px; padding: 10px; border-radius: 12px; background: var(--surface-1); border: 1px solid var(--border); }
+  .n + .n { margin-top: 8px; }
+  .n .app-tile { --s: 30px; border-radius: 9px; }
+  .n .body { flex: 1; min-width: 0; }
+  .n .top { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--text-3); }
+  .n b { display: block; margin-top: 1px; }
+  .n .d { color: var(--text-2); font-size: 12px; }
+  .n .acts { display: flex; gap: 6px; margin-top: 8px; }
+  .storage { display: flex; align-items: center; gap: 10px; margin-top: 12px; padding: 10px 12px; border-radius: 12px; background: var(--surface-1); border: 1px solid var(--border); }
+  .meter { flex: 1; height: 6px; border-radius: 999px; background: var(--surface-3); overflow: hidden; }
+  .meter span { display: block; width: 18%; height: 100%; background: var(--success); }
+</style>
+</head>
+<body>
+<div class="screen" id="screen">
+  <section class="win bgwin inactive"><div class="titlebar"><i data-tile="files" data-size="20"></i><span>Documents</span><div class="win-controls"><span class="wc"><i data-icon="minus"></i></span><span class="wc"><i data-icon="square"></i></span><span class="wc"><i data-icon="x"></i></span></div></div><div class="win-body"><aside class="sidebar"><div class="nav-item "><i data-icon="house"></i>Home</div><div class="nav-item "><i data-icon="monitor"></i>Desktop</div><div class="nav-item active"><i data-icon="file-text"></i>Documents</div><div class="nav-item "><i data-icon="images"></i>Pictures</div><div class="nav-item "><i data-icon="download"></i>Downloads</div><div class="nav-item "><i data-icon="trash-2"></i>Trash</div></aside><div class="grow table"><div class="tr th" style="grid-template-columns:1fr 130px 80px"><span>Name</span><span>Modified</span><span>Size</span></div><div class="tr" style="grid-template-columns:1fr 130px 80px"><span class="name"><span class="ficon folder"><i data-icon="folder"></i></span>Projects</span><span class="meta">Today, 09:14</span><span class="meta">6 items</span></div><div class="tr" style="grid-template-columns:1fr 130px 80px"><span class="name"><span class="ficon folder"><i data-icon="folder"></i></span>Meeting notes</span><span class="meta">Yesterday</span><span class="meta">12 items</span></div><div class="tr" style="grid-template-columns:1fr 130px 80px"><span class="name"><span class="ficon md"><i data-icon="file-text"></i></span>Q4-plan.md</span><span class="meta">Today, 10:41</span><span class="meta">4.1 KB</span></div><div class="tr" style="grid-template-columns:1fr 130px 80px"><span class="name"><span class="ficon md"><i data-icon="file-text"></i></span>roadmap-2027.md</span><span class="meta">22 Oct</span><span class="meta">8.6 KB</span></div><div class="tr" style="grid-template-columns:1fr 130px 80px"><span class="name"><span class="ficon txt"><i data-icon="file-pen-line"></i></span>notes.txt</span><span class="meta">25 Oct</span><span class="meta">1.2 KB</span></div><div class="tr" style="grid-template-columns:1fr 130px 80px"><span class="name"><span class="ficon img"><i data-icon="file-image"></i></span>architecture.png</span><span class="meta">20 Oct</span><span class="meta">248 KB</span></div><div class="tr" style="grid-template-columns:1fr 130px 80px"><span class="name"><span class="ficon code"><i data-icon="file-code"></i></span>budget.csv</span><span class="meta">18 Oct</span><span class="meta">3.4 KB</span></div></div></div></section>
+
+  <div class="panel cc" aria-label="Quick settings and notifications">
+    <div class="box glass">
+      <div class="tiles">
+        <div class="qt"><span class="ic"><i data-icon="moon"></i></span><div><b>Dark mode</b><span class="s">Off</span></div></div>
+        <div class="qt on"><span class="ic"><i data-icon="bell-off"></i></span><div><b>Do not disturb</b><span class="s">Until 11:00</span></div></div>
+        <div class="qt on"><span class="ic"><i data-icon="timer"></i></span><div><b>Focus timer</b><span class="s">18:24 left</span></div></div>
+        <div class="qt"><span class="ic"><i data-icon="accessibility"></i></span><div><b>Reduce motion</b><span class="s">Off</span></div></div>
+      </div>
+      <div class="slider"><i data-icon="type" style="color:var(--text-3);width:14px;height:14px"></i><div class="track"><span></span><b></b></div><i data-icon="type" style="color:var(--text-2)"></i><span class="t-xs muted" style="width:34px;text-align:right">100%</span></div>
+      <div class="row gap-10" style="margin-top:14px"><span class="t-sm medium muted" style="width:56px">Accent</span><div class="sw"><i class="on" style="background:#2563eb"></i><i style="background:#7c3aed"></i><i style="background:#0d9488"></i><i style="background:#16a34a"></i><i style="background:#ea580c"></i><i style="background:#e11d48"></i><i style="background:#475467"></i></div></div>
+      <div class="storage"><i data-icon="hard-drive" style="color:var(--text-2)"></i><div class="grow"><div class="row"><span class="medium grow">Storage</span><span class="t-xs muted">362 MB of 2 GB</span></div><div class="meter" style="margin-top:6px"><span></span></div></div></div>
+      <div class="who">
+        <span class="avatar" style="--size:32px">JD</span>
+        <div class="grow"><b>Jordan Diaz</b><div class="t-xs muted">Work · jordan.diaz@example.com</div></div>
+        <span class="btn sm icon" title="Settings"><i data-icon="settings"></i></span>
+        <span class="btn sm icon" title="Lock"><i data-icon="lock"></i></span>
+        <span class="btn sm icon" title="Sign out"><i data-icon="log-out"></i></span>
+      </div>
+    </div>
+
+    <div class="box glass">
+      <div class="nhead"><b class="grow">Notifications</b><span class="btn ghost sm">Clear all</span></div>
+      <div class="n">
+        <i data-tile="calendar" data-size="30"></i>
+        <div class="body"><div class="top">Calendar<span class="spacer">in 15 min</span></div><b>Design review</b><div class="d">11:00 – 11:45 · Prototype sign-off</div>
+          <div class="acts"><span class="btn sm">Snooze 5 min</span><span class="btn sm primary">Open</span></div></div>
+      </div>
+      <div class="n">
+        <i data-tile="files" data-size="30"></i>
+        <div class="body"><div class="top">Files<span class="spacer">8 min ago</span></div><b>3 files imported</b><div class="d">Added to ~/Downloads from your computer</div></div>
+      </div>
+      <div class="n">
+        <i data-tile="settings" data-size="30"></i>
+        <div class="body"><div class="top">System<span class="spacer">1 h ago</span></div><b>Update ready: v1.0.1</b><div class="d">Reload to get the latest version. Your work is saved.</div>
+          <div class="acts"><span class="btn sm"><i data-icon="refresh-cw" style="width:13px;height:13px"></i>Reload now</span></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="shared/icons.js"></script>
+<script src="shared/shell.js"></script>
+<script>
+  Shell.init({ topbar: { open: 'quick' }, dock: { running: ['files', 'calendar'], active: 'files' } });
+</script>
+</body>
+</html>

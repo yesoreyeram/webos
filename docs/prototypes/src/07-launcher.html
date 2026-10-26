@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>WebOS prototype: App launcher</title>
+<link rel="stylesheet" href="shared/proto.css" />
+<style>
+  .launcher { left: 50%; bottom: 96px; transform: translateX(-50%); width: 860px; height: 610px; display: grid; grid-template-columns: 1fr 260px; }
+  .main { padding: 22px 24px; display: flex; flex-direction: column; min-height: 0; }
+  .side { border-left: 1px solid var(--border); padding: 22px 18px; background: rgba(255,255,255,.35); }
+  [data-theme='dark'] .side { background: rgba(0,0,0,.15); }
+  .cats { display: flex; gap: 6px; margin: 16px 0 18px; }
+  .apps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+  .app { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 10px 4px 8px; border-radius: 14px; font-weight: 500; font-size: 12.5px; text-align: center; }
+  .app.hover { background: rgba(16, 24, 40, 0.06); }
+  .app small { display: block; font-size: 11px; color: var(--text-3); font-weight: 400; margin-top: -4px; }
+  .sect { display: flex; align-items: center; margin: 4px 0 6px; }
+  .rf { display: flex; align-items: center; gap: 10px; padding: 7px 8px; border-radius: 9px; margin: 0 -8px; }
+  .rf.hover { background: rgba(16,24,40,.05); }
+  .rf .ficon { width: 28px; height: 28px; }
+  .tipbox { margin-top: 18px; padding: 12px; border-radius: 12px; background: var(--accent-soft); color: var(--accent-text); font-size: 12px; display: flex; gap: 8px; }
+  .qa { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .q { height: 40px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface-1); display: flex; align-items: center; gap: 8px; padding: 0 12px; font-weight: 500; font-size: 12.5px; }
+  .q svg.i { color: var(--text-2); }
+  .foot { margin-top: auto; display: flex; align-items: center; gap: 10px; padding-top: 14px; border-top: 1px solid var(--border); }
+</style>
+</head>
+<body>
+<div class="screen dim" id="screen">
+  <div class="panel launcher" role="dialog" aria-label="App launcher">
+    <div class="main">
+      <div class="input lg focus"><i data-icon="search" style="width:18px;height:18px"></i><span>Search apps, files and settings</span><span class="spacer kbd">Ctrl K</span></div>
+      <div class="cats"><span class="chip on">All apps</span><span class="chip">Productivity</span><span class="chip">Utilities</span><span class="chip">Media</span><span class="chip">System</span></div>
+
+      <div class="sect"><span class="label grow">Pinned</span><span class="btn ghost sm">Edit</span></div>
+      <div class="apps">
+        <div class="app"><i data-tile="files" data-size="52"></i>Files</div>
+        <div class="app hover"><i data-tile="editor" data-size="52"></i>Text Editor</div>
+        <div class="app"><i data-tile="terminal" data-size="52"></i>Terminal</div>
+        <div class="app"><i data-tile="calendar" data-size="52"></i>Calendar</div>
+        <div class="app"><i data-tile="media" data-size="52"></i>Media Viewer</div>
+      </div>
+      <div class="sect" style="margin-top:14px"><span class="label grow">More apps</span><span class="t-xs subtle">9 apps installed</span></div>
+      <div class="apps">
+        <div class="app"><i data-tile="calculator" data-size="52"></i>Calculator</div>
+        <div class="app"><i data-tile="clock" data-size="52"></i>Clock</div>
+        <div class="app"><i data-tile="settings" data-size="52"></i>Settings</div>
+        <div class="app"><i data-tile="trash" data-size="52"></i>Trash</div>
+      </div>
+      <div class="sect" style="margin-top:14px"><span class="label grow">Quick actions</span></div>
+      <div class="qa">
+        <span class="q"><i data-icon="file-plus"></i>New text file</span>
+        <span class="q"><i data-icon="folder-plus"></i>New folder</span>
+        <span class="q"><i data-icon="upload"></i>Upload files</span>
+        <span class="q"><i data-icon="calendar-days"></i>New event</span>
+      </div>
+      <div class="foot">
+        <span class="avatar" style="--size:30px">JD</span>
+        <div class="col grow"><b>Jordan Diaz</b><span class="t-xs muted">Work profile</span></div>
+        <span class="btn sm"><i data-icon="lock" style="width:14px;height:14px"></i>Lock</span>
+        <span class="btn sm"><i data-icon="users" style="width:14px;height:14px"></i>Switch profile</span>
+        <span class="btn sm icon"><i data-icon="power"></i></span>
+      </div>
+    </div>
+    <aside class="side">
+      <div class="label" style="margin-bottom:8px">Recent</div>
+      <div class="rf hover"><span class="ficon md"><i data-icon="file-text"></i></span><div class="grow"><div class="medium">Q4-plan.md</div><div class="t-xs subtle">10:41</div></div></div>
+      <div class="rf"><span class="ficon txt"><i data-icon="file-pen-line"></i></span><div class="grow"><div class="medium">notes.txt</div><div class="t-xs subtle">Yesterday</div></div></div>
+      <div class="rf"><span class="ficon img"><i data-icon="file-image"></i></span><div class="grow"><div class="medium">architecture.png</div><div class="t-xs subtle">20 Oct</div></div></div>
+      <div class="rf"><span class="ficon code"><i data-icon="file-code"></i></span><div class="grow"><div class="medium">budget.csv</div><div class="t-xs subtle">18 Oct</div></div></div>
+      <div class="rf"><span class="ficon md"><i data-icon="book-open"></i></span><div class="grow"><div class="medium">Welcome.md</div><div class="t-xs subtle">12 Oct</div></div></div>
+      <div class="tipbox"><i data-icon="sparkles" style="width:15px;height:15px"></i><span>Tip: press <b>Alt 1–7</b> to open dock apps without the mouse.</span></div>
+    </aside>
+  </div>
+</div>
+<script src="shared/icons.js"></script>
+<script src="shared/shell.js"></script>
+<script>
+  Shell.init({ topbar: {}, dock: { running: ['files'], active: 'files', launcherOpen: true } });
+</script>
+</body>
+</html>
