@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>WebOS prototype: Profile picker</title>
+<link rel="stylesheet" href="shared/proto.css" />
+<style>
+  .veil { position: absolute; inset: 0; background: rgba(255, 255, 255, 0.35); backdrop-filter: blur(18px); }
+  .center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1; }
+  .acct-chip { display: flex; align-items: center; gap: 10px; padding: 6px 8px 6px 6px; border-radius: 999px; background: rgba(255,255,255,.7); border: 1px solid rgba(255,255,255,.8); box-shadow: var(--shadow-2); margin-bottom: 28px; }
+  .acct-chip .badge { margin-left: 4px; }
+  h1 { margin: 0 0 8px; font-size: 34px; letter-spacing: -0.03em; color: #0b1220; }
+  .lead { color: #475467; font-size: 15px; margin-bottom: 40px; }
+  .profiles { display: flex; gap: 24px; }
+  .p { width: 172px; padding: 18px 14px 16px; border-radius: 20px; display: flex; flex-direction: column; align-items: center; gap: 12px; background: rgba(255,255,255,.55); border: 1px solid rgba(255,255,255,.75); position: relative; }
+  .p.sel { background: #fff; box-shadow: 0 0 0 2px var(--accent), var(--shadow-3); }
+  .p .face { width: 104px; height: 104px; border-radius: 28px; display: grid; place-items: center; color: #fff; position: relative; box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 8px 18px -8px rgba(16,24,40,.35); }
+  .p .face svg.i { width: 44px; height: 44px; stroke-width: 1.6; }
+  .p .lockb { position: absolute; right: -6px; bottom: -6px; width: 30px; height: 30px; border-radius: 999px; background: #fff; color: var(--text-1); display: grid; place-items: center; box-shadow: var(--shadow-2); }
+  .p .lockb svg.i { width: 15px; height: 15px; }
+  .p b { font-size: 15px; }
+  .p .meta { font-size: 12px; color: var(--text-2); margin-top: -8px; }
+  .p.add { border: 1.5px dashed #98a2b3; background: rgba(255,255,255,.3); }
+  .p.add .face { background: rgba(255,255,255,.7); color: var(--text-2); box-shadow: none; border: 1px solid var(--border); }
+  .actions { display: flex; gap: 10px; margin-top: 40px; }
+  .hint { margin-top: 22px; display: flex; align-items: center; gap: 8px; color: #475467; font-size: 12.5px; }
+  .kb { position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); display: flex; gap: 18px; color: #475467; font-size: 12px; z-index: 1; }
+  .kb span { display: flex; align-items: center; gap: 6px; }
+  .p .tag { position: absolute; top: -11px; left: 50%; transform: translateX(-50%); box-shadow: var(--shadow-1); background: var(--accent); color: #fff; }
+</style>
+</head>
+<body>
+<div class="screen" id="screen">
+  <div class="veil"></div>
+  <div class="center">
+    <div class="acct-chip">
+      <span class="avatar" style="--size:30px">JD</span>
+      <div class="col"><span class="strong">Jordan Diaz</span><span class="t-xs muted">jordan.diaz@example.com</span></div>
+      <span class="badge"><span data-google style="display:grid;transform:scale(.7)"></span>Google</span>
+      <span class="btn sm ghost">Switch account</span>
+    </div>
+    <h1>Who's working today?</h1>
+    <div class="lead">Each profile has its own files, apps, wallpaper and settings.</div>
+
+    <div class="profiles">
+      <div class="p sel">
+        <span class="tag badge accent">Last used</span>
+        <span class="face" style="background:linear-gradient(140deg,#60a5fa,#2563eb)"><i data-icon="briefcase"></i><span class="lockb"><i data-icon="lock"></i></span></span>
+        <b>Work</b><span class="meta">PIN · Encrypted</span>
+      </div>
+      <div class="p">
+        <span class="face" style="background:linear-gradient(140deg,#34d399,#059669)"><i data-icon="house"></i></span>
+        <b>Personal</b><span class="meta">Used yesterday</span>
+      </div>
+      <div class="p">
+        <span class="face" style="background:linear-gradient(140deg,#c4b5fd,#7c3aed)"><i data-icon="sparkles"></i><span class="lockb"><i data-icon="lock"></i></span></span>
+        <b>Side project</b><span class="meta">PIN · Encrypted</span>
+      </div>
+      <div class="p add">
+        <span class="face"><i data-icon="plus"></i></span>
+        <b>Add profile</b><span class="meta">Up to 8 per account</span>
+      </div>
+    </div>
+
+    <div class="actions">
+      <span class="btn"><i data-icon="settings"></i>Manage profiles</span>
+      <span class="btn ghost" style="color:#475467"><i data-icon="log-out"></i>Sign out</span>
+    </div>
+    <div class="hint"><i data-icon="shield-check" style="color:var(--success)"></i>Profiles are stored only in this browser. PIN-protected profiles are encrypted at rest.</div>
+  </div>
+  <div class="kb"><span><span class="kbd">←</span><span class="kbd">→</span> Choose</span><span><span class="kbd">Enter</span> Open</span><span><span class="kbd">N</span> New profile</span></div>
+</div>
+<script src="shared/icons.js"></script>
+<script src="shared/shell.js"></script>
+<script>Shell.init({ topbar: false, dock: false });</script>
+</body>
+</html>

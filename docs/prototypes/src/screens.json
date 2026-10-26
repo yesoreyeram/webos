@@ -1,0 +1,15 @@
+[
+  { "id": "01-sign-in", "file": "01-sign-in.html", "title": "Sign in" },
+  { "id": "02-profile-picker", "file": "02-profile-picker.html", "title": "Profile picker" },
+  { "id": "03-lock-screen", "file": "03-lock-screen.html", "title": "Lock screen" },
+  { "id": "04-desktop-empty", "file": "04-desktop-empty.html", "title": "Desktop (first run)" },
+  { "id": "05-desktop-multitasking", "file": "05-desktop-multitasking.html", "title": "Multitasking with snap layouts" },
+  { "id": "06-command-palette", "file": "06-command-palette.html", "title": "Command palette" },
+  { "id": "07-launcher", "file": "07-launcher.html", "title": "App launcher" },
+  { "id": "08-quick-settings-notifications", "file": "08-quick-settings-notifications.html", "title": "Quick settings and notifications" },
+  { "id": "09-settings-app", "file": "09-settings-app.html", "title": "Settings" },
+  { "id": "10-terminal-calendar", "file": "10-terminal-calendar.html", "title": "Terminal and Calendar" },
+  { "id": "11-media-viewer", "file": "11-media-viewer.html", "title": "Media viewer and Markdown preview" },
+  { "id": "12-desktop-dark", "file": "05-desktop-multitasking.html", "query": "?theme=dark", "title": "Dark mode" },
+  { "id": "13-mobile", "file": "13-mobile.html", "title": "Mobile and tablet layout" }
+]

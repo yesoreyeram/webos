@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>WebOS prototype: Media viewer and Markdown preview</title>
+<link rel="stylesheet" href="shared/proto.css" />
+<style>
+  .viewer { left: 8px; top: 46px; width: 900px; height: 758px; background: #0e0f13; }
+  .viewer .titlebar { background: #15171d; border-bottom-color: #23262f; color: #e4e7ec; }
+  .viewer .wc { color: #9aa3b2; }
+  .vbar { height: 46px; display: flex; align-items: center; gap: 4px; padding: 0 10px; background: #15171d; border-bottom: 1px solid #23262f; color: #c9ced8; }
+  .vbtn { height: 30px; min-width: 30px; padding: 0 8px; border-radius: 7px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; color: #c9ced8; font-weight: 500; font-size: 12.5px; }
+  .vbtn.on { background: #2a2e39; color: #fff; }
+  .vsep { width: 1px; height: 18px; background: #2a2e39; margin: 0 6px; }
+  .stage { flex: 1; display: flex; min-height: 0; }
+  .canvas { flex: 1; display: grid; place-items: center; position: relative; background: radial-gradient(circle at 50% 45%, #1a1c24, #0e0f13 70%); }
+  .canvas img { width: 560px; border-radius: 6px; box-shadow: 0 20px 60px -20px rgba(0,0,0,.8); }
+  .nav { position: absolute; top: 50%; width: 38px; height: 38px; margin-top: -19px; border-radius: 999px; background: rgba(255,255,255,.1); color: #fff; display: grid; place-items: center; backdrop-filter: blur(8px); }
+  .info { width: 240px; flex: none; background: #15171d; border-left: 1px solid #23262f; padding: 16px; color: #c9ced8; display: flex; flex-direction: column; gap: 12px; }
+  .info .label { color: #8790a3; }
+  .kv { display: grid; grid-template-columns: 82px 1fr; row-gap: 9px; font-size: 12.5px; }
+  .kv span:nth-child(odd) { color: #7d8697; }
+  .kv span:nth-child(even) { color: #e4e7ec; font-weight: 500; }
+  .tagc { height: 24px; padding: 0 9px; border-radius: 999px; background: #232631; color: #c9ced8; font-size: 11.5px; font-weight: 500; display: inline-flex; align-items: center; }
+  .ib { height: 32px; border-radius: 8px; background: #232631; color: #e4e7ec; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 500; font-size: 12.5px; }
+  .ib.primary { background: var(--accent); color: #fff; }
+  .strip { height: 86px; flex: none; display: flex; align-items: center; justify-content: center; gap: 8px; background: #15171d; border-top: 1px solid #23262f; }
+  .th { width: 84px; height: 56px; border-radius: 7px; overflow: hidden; opacity: .55; }
+  .th img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .th.on { opacity: 1; box-shadow: 0 0 0 2px #15171d, 0 0 0 4px var(--accent); }
+  .md { left: 916px; top: 46px; width: 516px; height: 758px; }
+  .mdbody { flex: 1; padding: 22px 30px; overflow: hidden; color: var(--text-1); font-size: 13.5px; line-height: 1.6; }
+  .mdbody h1 { font-size: 24px; letter-spacing: -0.02em; margin: 0 0 6px; }
+  .mdbody h2 { font-size: 16px; margin: 20px 0 8px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+  .mdbody p { margin: 0 0 10px; color: var(--text-2); }
+  .mdbody ul { margin: 0; padding: 0; list-style: none; }
+  .mdbody li { display: flex; gap: 8px; align-items: center; padding: 2px 0; }
+  .cb { width: 15px; height: 15px; border-radius: 4px; border: 1.5px solid var(--border-strong); display: grid; place-items: center; }
+  .cb.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .cb.on svg.i { width: 10px; height: 10px; stroke-width: 3.5; }
+  .mdbody table { border-collapse: collapse; width: 100%; font-size: 12.5px; }
+  .mdbody th, .mdbody td { border: 1px solid var(--border); padding: 6px 10px; text-align: left; }
+  .mdbody th { background: var(--surface-2); font-weight: 600; }
+  .mdbody code { font-family: var(--font-mono); font-size: 12px; background: var(--surface-3); padding: 1px 5px; border-radius: 4px; }
+  .mdbody pre { background: #0f1117; color: #d7dae0; border-radius: 10px; padding: 12px 14px; font-family: var(--font-mono); font-size: 12px; line-height: 1.6; margin: 10px 0; }
+  .mdbody blockquote { margin: 12px 0 0; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 8px 8px 0; color: var(--text-1); font-size: 12.5px; }
+</style>
+</head>
+<body>
+<div class="screen" id="screen">
+  <section class="win viewer" aria-label="Media Viewer">
+    <div class="titlebar"><i data-tile="media" data-size="20"></i><span>lake-sunrise.webp</span><span style="font-weight:500;color:#7d8697">3 of 12 · Pictures</span>
+      <div class="win-controls"><span class="wc"><i data-icon="minus"></i></span><span class="wc"><i data-icon="square"></i></span><span class="wc"><i data-icon="x"></i></span></div></div>
+    <div class="vbar">
+      <span class="vbtn"><i data-icon="arrow-left"></i>Pictures</span>
+      <span class="vsep"></span>
+      <span class="vbtn"><i data-icon="zoom-out"></i></span><span class="vbtn" style="min-width:52px">100%</span><span class="vbtn"><i data-icon="zoom-in"></i></span>
+      <span class="vbtn"><i data-icon="scan"></i>Fit</span><span class="vbtn"><i data-icon="rotate-cw"></i></span>
+      <span class="spacer"></span>
+      <span class="vbtn"><i data-icon="play"></i>Slideshow</span>
+      <span class="vbtn"><i data-icon="download"></i></span>
+      <span class="vbtn on"><i data-icon="info"></i></span>
+      <span class="vbtn"><i data-icon="trash-2"></i></span>
+    </div>
+    <div class="stage">
+      <div class="canvas">
+        <img src="shared/sample-landscape.svg" alt="Sample landscape: lake at sunrise" />
+        <span class="nav" style="left:16px"><i data-icon="chevron-left"></i></span>
+        <span class="nav" style="right:16px"><i data-icon="chevron-right"></i></span>
+      </div>
+      <aside class="info">
+        <div class="label">Details</div>
+        <div class="kv"><span>Dimensions</span><span>2400 × 1600</span><span>Size</span><span>412 KB</span><span>Type</span><span>WebP image</span><span>Modified</span><span>20 Oct, 14:12</span><span>Location</span><span>~/Pictures</span></div>
+        <div class="label" style="margin-top:6px">Tags</div>
+        <div class="row gap-6" style="flex-wrap:wrap"><span class="tagc">Landscape</span><span class="tagc">Wallpaper</span><span class="tagc">+ Add</span></div>
+        <div style="margin-top:auto" class="col gap-8">
+          <span class="ib primary"><i data-icon="monitor"></i>Set as wallpaper</span>
+          <span class="ib"><i data-icon="app-window"></i>Open with…</span>
+        </div>
+      </aside>
+    </div>
+    <div class="strip">
+      <span class="th"><img src="shared/sample-landscape.svg" alt="" style="filter:hue-rotate(140deg)"></span>
+      <span class="th"><img src="shared/sample-landscape.svg" alt="" style="filter:hue-rotate(60deg) saturate(.8)"></span>
+      <span class="th on"><img src="shared/sample-landscape.svg" alt=""></span>
+      <span class="th"><img src="shared/sample-landscape.svg" alt="" style="filter:hue-rotate(200deg)"></span>
+      <span class="th"><img src="shared/sample-landscape.svg" alt="" style="filter:grayscale(1)"></span>
+      <span class="th"><img src="shared/sample-landscape.svg" alt="" style="filter:hue-rotate(300deg)"></span>
+      <span class="th"><img src="shared/sample-landscape.svg" alt="" style="filter:hue-rotate(100deg) brightness(1.1)"></span>
+      <span class="th"><img src="shared/sample-landscape.svg" alt="" style="filter:sepia(.7)"></span>
+    </div>
+  </section>
+
+  <section class="win md" aria-label="Markdown preview">
+    <div class="titlebar"><i data-tile="media" data-size="20"></i><span>Welcome.md</span>
+      <div class="segmented" style="margin-left:auto"><span class="on"><i data-icon="eye" style="width:13px;height:13px"></i>Preview</span><span><i data-icon="file-code" style="width:13px;height:13px"></i>Source</span></div>
+      <div class="win-controls" style="margin-left:6px"><span class="wc"><i data-icon="minus"></i></span><span class="wc"><i data-icon="square"></i></span><span class="wc close"><i data-icon="x"></i></span></div></div>
+    <div class="mdbody">
+      <h1>Welcome to WebOS</h1>
+      <p>Your private desktop in the browser. Everything you create lives in this profile, on this device.</p>
+      <h2>Getting started</h2>
+      <ul>
+        <li><span class="cb on"><i data-icon="check"></i></span>Sign in or create a local account</li>
+        <li><span class="cb on"><i data-icon="check"></i></span>Pick a profile and wallpaper</li>
+        <li><span class="cb"></span>Set a PIN to encrypt this profile</li>
+        <li><span class="cb"></span>Open the Terminal and type <code>help</code></li>
+      </ul>
+      <h2>Handy shortcuts</h2>
+      <table>
+        <tr><th>Action</th><th>Shortcut</th></tr>
+        <tr><td>Command palette</td><td><code>Ctrl K</code></td></tr>
+        <tr><td>Open dock app 1–7</td><td><code>Alt 1–7</code></td></tr>
+        <tr><td>Snap window left / right</td><td><code>Alt ← / →</code></td></tr>
+        <tr><td>Lock profile</td><td><code>Ctrl Alt L</code></td></tr>
+      </table>
+      <pre>$ cd ~/Documents && ls
+Projects  Meeting notes  Q4-plan.md</pre>
+      <blockquote><b>Tip:</b> Back up a profile anytime from Settings → Storage &amp; Backup.</blockquote>
+    </div>
+    <div class="statusbar"><span class="row gap-4"><i data-icon="shield-check" style="width:13px;height:13px;color:var(--success)"></i>Sanitized preview: scripts and remote content blocked</span><span class="spacer">2.0 KB</span></div>
+  </section>
+</div>
+<script src="shared/icons.js"></script>
+<script src="shared/shell.js"></script>
+<script>
+  Shell.init({ topbar: {}, dock: { running: ['media', 'files'], active: 'media' } });
+</script>
+</body>
+</html>

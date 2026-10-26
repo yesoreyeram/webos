@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>WebOS prototype: Desktop (first run)</title>
+<link rel="stylesheet" href="shared/proto.css" />
+<style>
+  .welcome { position: absolute; left: 50%; top: 168px; transform: translateX(-58%); width: 640px; padding: 28px; border-radius: 20px; background: var(--glass-bg-strong); z-index: 6; }
+  .welcome h2 { margin: 0; font-size: 24px; letter-spacing: -0.02em; }
+  .welcome .lead { color: var(--text-2); margin: 6px 0 22px; font-size: 14px; }
+  .steps { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .step { display: flex; gap: 12px; padding: 14px; border-radius: 14px; background: var(--surface-1); border: 1px solid var(--border); align-items: flex-start; }
+  .step .ic { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; flex: none; }
+  .step b { display: block; font-size: 13px; margin-bottom: 2px; }
+  .step span.d { font-size: 12px; color: var(--text-2); }
+  .step.done .ic { background: var(--success-soft); color: var(--success); }
+  .progress { display: flex; align-items: center; gap: 10px; margin-top: 18px; color: var(--text-2); font-size: 12px; }
+  .bar { flex: 1; height: 6px; border-radius: 999px; background: var(--surface-3); overflow: hidden; }
+  .bar span { display: block; width: 25%; height: 100%; background: var(--success); }
+  .clockw .big { font-size: 40px; font-weight: 600; letter-spacing: -0.03em; line-height: 1; font-variant-numeric: tabular-nums; }
+  .ev { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; }
+  .ev + .ev { border-top: 1px solid var(--border); }
+  .ev .bar2 { width: 3px; align-self: stretch; border-radius: 3px; }
+  .rf { display: flex; align-items: center; gap: 10px; padding: 6px 0; }
+  .rf .ficon { width: 26px; height: 26px; }
+  .wx { display: flex; gap: 10px; align-items: center; }
+</style>
+</head>
+<body>
+<div class="screen" id="screen">
+
+  <div class="desk-icons">
+    <div class="desk-icon"><span class="big ficon folder"><i data-icon="house"></i></span>Home</div>
+    <div class="desk-icon sel"><span class="big ficon md"><i data-icon="book-open"></i></span>Welcome.md</div>
+    <div class="desk-icon"><span class="big ficon img"><i data-icon="images"></i></span>Pictures</div>
+  </div>
+
+  <div class="welcome glass">
+    <div class="row gap-12" style="align-items:flex-start">
+      <div class="grow">
+        <span class="badge accent" style="margin-bottom:10px"><i data-icon="sparkles" style="width:12px;height:12px"></i>New profile</span>
+        <h2>Welcome to WebOS, Jordan</h2>
+        <div class="lead">A few quick steps to make the <b>Work</b> profile yours.</div>
+      </div>
+      <span class="btn ghost icon sm"><i data-icon="x"></i></span>
+    </div>
+    <div class="steps">
+      <div class="step done"><span class="ic"><i data-icon="check"></i></span><div><b>Create your profile</b><span class="d">Signed in with Google</span></div></div>
+      <div class="step"><span class="ic" style="background:var(--accent-soft);color:var(--accent)"><i data-icon="lock"></i></span><div><b>Protect with a PIN</b><span class="d">Encrypts this profile's data at rest</span></div></div>
+      <div class="step"><span class="ic" style="background:#f3e8ff;color:#7c3aed"><i data-icon="palette"></i></span><div><b>Personalize</b><span class="d">Theme, accent color and wallpaper</span></div></div>
+      <div class="step"><span class="ic" style="background:#fff1e6;color:#ea580c"><i data-icon="command"></i></span><div><b>Try the command palette</b><span class="d">Press <span class="kbd">Ctrl K</span> to find anything</span></div></div>
+    </div>
+    <div class="progress"><span>1 of 4 done</span><div class="bar"><span></span></div><span class="btn sm primary">Continue setup</span></div>
+  </div>
+
+  <aside class="widgets">
+    <div class="widget glass clockw">
+      <div class="row"><div class="grow"><div class="big">10:42</div><div class="muted" style="margin-top:6px">Monday, 26 October</div></div>
+        <div class="col" style="align-items:flex-end;gap:4px"><span class="badge">London 09:42</span><span class="badge">Tokyo 18:42</span></div></div>
+    </div>
+    <div class="widget glass">
+      <div class="row"><span class="label grow">Today</span><span class="t-xs subtle">2 events</span></div>
+      <div class="ev"><span class="bar2" style="background:#e11d48"></span><div class="grow"><b>Design review</b><div class="t-sm muted">11:00 – 11:45 · in 18 min</div></div></div>
+      <div class="ev"><span class="bar2" style="background:#2563eb"></span><div class="grow"><b>Sprint planning</b><div class="t-sm muted">14:00 – 15:00</div></div></div>
+    </div>
+    <div class="widget glass">
+      <div class="label">Recent files</div>
+      <div class="rf"><span class="ficon md"><i data-icon="file-text"></i></span><div class="grow"><div class="medium">Q4-plan.md</div><div class="t-xs subtle">Documents · 10:41</div></div></div>
+      <div class="rf"><span class="ficon txt"><i data-icon="file-pen-line"></i></span><div class="grow"><div class="medium">notes.txt</div><div class="t-xs subtle">Documents · Yesterday</div></div></div>
+      <div class="rf"><span class="ficon img"><i data-icon="file-image"></i></span><div class="grow"><div class="medium">architecture.png</div><div class="t-xs subtle">Pictures · 20 Oct</div></div></div>
+    </div>
+  </aside>
+
+</div>
+<script src="shared/icons.js"></script>
+<script src="shared/shell.js"></script>
+<script>
+  Shell.init({ topbar: { workspaces: ['Main'], notifications: 1 }, dock: { running: [], tooltip: 'files' } });
+</script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>WebOS prototype: Lock screen</title>
+<link rel="stylesheet" href="shared/proto.css" />
+<style>
+  .screen { background: var(--wallpaper); }
+  .veil { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15,23,42,.25), rgba(15,23,42,.45)); backdrop-filter: blur(28px) saturate(140%); }
+  .layer { position: absolute; inset: 0; z-index: 1; color: #fff; display: flex; flex-direction: column; align-items: center; }
+  .time { margin-top: 70px; font-size: 104px; font-weight: 600; letter-spacing: -0.04em; line-height: 1; font-variant-numeric: tabular-nums; text-shadow: 0 2px 24px rgba(0,0,0,.15); }
+  .date { font-size: 20px; font-weight: 500; opacity: .92; margin-top: 10px; }
+  .who { margin-top: 48px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .who .face { width: 76px; height: 76px; border-radius: 22px; display: grid; place-items: center; background: linear-gradient(140deg,#60a5fa,#2563eb); box-shadow: 0 0 0 4px rgba(255,255,255,.25), 0 10px 30px -10px rgba(0,0,0,.5); }
+  .who .face svg.i { width: 34px; height: 34px; stroke-width: 1.7; }
+  .who b { font-size: 18px; }
+  .who span { font-size: 13px; opacity: .8; }
+  .pin { margin-top: 22px; display: flex; align-items: center; gap: 10px; padding: 0 8px 0 16px; height: 46px; width: 300px; border-radius: 14px; background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.35); box-shadow: 0 0 0 4px rgba(255,255,255,.08); }
+  .pin .dots { display: flex; gap: 10px; flex: 1; }
+  .pin .dots i { width: 10px; height: 10px; border-radius: 999px; background: #fff; display: block; }
+  .pin .dots i.e { background: transparent; box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.6); }
+  .go { width: 32px; height: 32px; border-radius: 10px; background: #fff; color: #1d4ed8; display: grid; place-items: center; }
+  .pad { margin-top: 22px; display: grid; grid-template-columns: repeat(3, 64px); gap: 12px; }
+  .key { height: 52px; border-radius: 14px; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.18); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 20px; font-weight: 500; }
+  .key small { font-size: 8.5px; letter-spacing: .14em; opacity: .7; margin-top: -2px; }
+  .key.ghost { background: transparent; border-color: transparent; }
+  .key.down { background: rgba(255,255,255,.32); }
+  .links { margin-top: 22px; display: flex; gap: 8px; }
+  .links span { height: 30px; padding: 0 12px; border-radius: 999px; background: rgba(255,255,255,.12); display: flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 500; }
+  .status { position: absolute; z-index: 1; bottom: 22px; right: 28px; display: flex; gap: 14px; color: #fff; opacity: .9; font-size: 12.5px; align-items: center; }
+  .status span { display: flex; align-items: center; gap: 6px; }
+  .notice { position: absolute; z-index: 1; bottom: 22px; left: 28px; display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 14px; color: #fff; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.2); font-size: 12.5px; }
+  .notice .app-tile { --s: 28px; }
+</style>
+</head>
+<body>
+<div class="screen" id="screen">
+  <div class="veil"></div>
+  <div class="layer">
+    <div class="time">10:42</div>
+    <div class="date">Monday, 26 October</div>
+    <div class="who">
+      <span class="face"><i data-icon="briefcase"></i></span>
+      <b>Work</b>
+      <span>Jordan Diaz · Locked after 10 min idle</span>
+    </div>
+    <div class="pin">
+      <i data-icon="key-round" style="opacity:.8"></i>
+      <div class="dots"><i></i><i></i><i></i><i></i><i class="e"></i><i class="e"></i></div>
+      <span class="go"><i data-icon="arrow-right"></i></span>
+    </div>
+    <div class="pad">
+      <span class="key">1<small>&nbsp;</small></span><span class="key">2<small>ABC</small></span><span class="key">3<small>DEF</small></span>
+      <span class="key">4<small>GHI</small></span><span class="key down">5<small>JKL</small></span><span class="key">6<small>MNO</small></span>
+      <span class="key">7<small>PQRS</small></span><span class="key">8<small>TUV</small></span><span class="key">9<small>WXYZ</small></span>
+      <span class="key ghost"><i data-icon="fingerprint" style="opacity:.5"></i></span><span class="key">0</span><span class="key ghost"><i data-icon="delete"></i></span>
+    </div>
+    <div class="links">
+      <span><i data-icon="users" style="width:14px;height:14px"></i>Switch profile</span>
+      <span><i data-icon="log-out" style="width:14px;height:14px"></i>Sign out</span>
+      <span><i data-icon="circle-help" style="width:14px;height:14px"></i>Forgot PIN?</span>
+    </div>
+  </div>
+  <div class="notice"><i data-tile="calendar" data-size="28"></i><div class="col"><b>Design review</b><span style="opacity:.8">in 15 minutes · 11:00</span></div></div>
+  <div class="status"><span><i data-icon="cloud-check" style="width:14px;height:14px"></i>Saved locally</span><span><i data-icon="languages" style="width:14px;height:14px"></i>EN</span><span><i data-icon="accessibility" style="width:14px;height:14px"></i></span><span><i data-icon="power" style="width:14px;height:14px"></i></span></div>
+</div>
+<script src="shared/icons.js"></script>
+<script src="shared/shell.js"></script>
+<script>Shell.init({ topbar: false, dock: false });</script>
+</body>
+</html>
